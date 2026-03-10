@@ -1,5 +1,6 @@
 package it.atletasportjpamaven.service;
 
+import it.atletasportjpamaven.dao.AtletaDAO;
 import it.atletasportjpamaven.dao.EntityManagerUtil;
 import it.atletasportjpamaven.dao.SportDAO;
 import it.atletasportjpamaven.model.Atleta;
@@ -12,6 +13,7 @@ import java.util.List;
 public class SportServiceImpl implements SportService{
 
     private SportDAO sportDAO;
+    private AtletaDAO atletaDAO;
 
     @Override
     public List<Sport> listAll() throws Exception {
@@ -180,8 +182,33 @@ public class SportServiceImpl implements SportService{
     }
 
     @Override
+    public void removeAtletaAfterUnbindingSports(Long idAtleta) throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            atletaDAO.setEntityManager(entityManager);
+            sportDAO.setEntityManager(entityManager);
+
+            Atleta atletaDaRimuovere = atletaDAO.findById(idAtleta);
+            this.scollegaAtletaDaSport(atletaDaRimuovere.getId());
+            atletaDAO.delete(atletaDaRimuovere);
+
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+    }
+
+    @Override
     public void setSportDAO(SportDAO sportDAO) {
         this.sportDAO = sportDAO;
     }
+    public void setAtletaDAO(AtletaDAO atletaDAO) {this.atletaDAO = atletaDAO;}
 
 }

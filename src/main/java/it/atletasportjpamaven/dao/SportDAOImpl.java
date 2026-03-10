@@ -62,5 +62,4 @@ public class SportDAOImpl implements SportDAO{
         this.entityManager = entityManager;
     }
 
-
 }

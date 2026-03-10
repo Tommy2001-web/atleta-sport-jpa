@@ -26,5 +26,9 @@ public interface SportService {
 
     public void scollegaAtletaDaSport(Long idAtleta) throws Exception;
 
+    public void removeAtletaAfterUnbindingSports(Long idAtleta) throws Exception;
+
     public void setSportDAO(SportDAO sportDAO);
+
+    public void setAtletaDAO(AtletaDAO atletaDAO);
 }

@@ -29,8 +29,10 @@ public class TestAtletaSport {
             testCRUD(sportServiceInstance);
 
             testCollegaSportAdAtletaEsistente(atletaServiceInstance, sportServiceInstance);
-            */
+
             testScollegaAtletaDaSport(sportServiceInstance, atletaServiceInstance);
+            */
+            testRemoveAtletaAfterUnbindingSports(sportServiceInstance, atletaServiceInstance);
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -153,5 +155,22 @@ public class TestAtletaSport {
             throw new RuntimeException("testScollegaAtletaDaSport fallito: sport ancora associato ");
 
         System.out.println(".......testScollegaAtletaDaSport fine: PASSED.............");
+    }
+
+    private static void testRemoveAtletaAfterUnbindingSports (
+            SportService sportServiceInstance,
+            AtletaService atletaServiceInstance)
+            throws Exception {
+        System.out.println("-----------testRemoveAtletaAfterUnbindingSports inizio------------");
+        Atleta atletaDaCollegare = atletaServiceInstance.findById(1L);
+        if (atletaDaCollegare == null) throw new Exception("testRemoveAtletaAfterUnbindingSports FAILED: atleta non trovato");
+        Sport sportDaCollegare = sportServiceInstance.findById(1L);
+        if (sportDaCollegare == null) throw new Exception("testRemoveAtletaAfterUnbindingSports FAILED: sport non trovato");
+        sportServiceInstance.collegaAdAtletaEsistente(atletaDaCollegare, sportDaCollegare);
+
+        sportServiceInstance.removeAtletaAfterUnbindingSports(atletaDaCollegare.getId());
+        if (atletaServiceInstance.findById(atletaDaCollegare.getId()) != null) throw new Exception("testRemoveAtletaAfterUnbindingSports FAILED: atleta ancora presente dopo la remove");
+        System.out.println("----------testRemoveAtletaAfterUnbindingSports PASSED--------------");
+
     }
 }
