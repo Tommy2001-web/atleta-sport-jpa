@@ -1,8 +1,10 @@
 package it.atletasportjpamaven.dao;
 
+import it.atletasportjpamaven.model.AttivitaSportiva;
 import it.atletasportjpamaven.model.Sport;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class SportDAOImpl implements SportDAO{
@@ -38,7 +40,18 @@ public class SportDAOImpl implements SportDAO{
     }
 
     @Override
+    public Sport findByDescrizione(AttivitaSportiva descrizione) throws Exception {
+        TypedQuery<Sport> query = entityManager
+                .createQuery("select s from Sport s where s.descrizione=?1", Sport.class)
+                .setParameter(1, descrizione);
+
+        return query.getResultStream().findFirst().orElse(null);
+    }
+
+    @Override
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
+
 }

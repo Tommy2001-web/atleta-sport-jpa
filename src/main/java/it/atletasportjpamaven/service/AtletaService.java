@@ -21,4 +21,6 @@ public interface AtletaService {
 
     public void setSportDAO(SportDAO sportDAO);
     public void setAtletaDAO(AtletaDAO atletaDAO);
+
+    public Atleta findAtletaByIdWithSport(Long id) throws Exception;
 }

@@ -1,7 +1,10 @@
 package it.atletasportjpamaven.service;
 
+import it.atletasportjpamaven.dao.AtletaDAO;
 import it.atletasportjpamaven.dao.EntityManagerUtil;
 import it.atletasportjpamaven.dao.SportDAO;
+import it.atletasportjpamaven.model.Atleta;
+import it.atletasportjpamaven.model.AttivitaSportiva;
 import it.atletasportjpamaven.model.Sport;
 
 import javax.persistence.EntityManager;
@@ -117,6 +120,49 @@ public class SportServiceImpl implements SportService{
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+    }
+
+    @Override
+    public void collegaAdAtletaEsistente(Atleta atletaEsistente, Sport sportInstance) throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            sportDAO.setEntityManager(entityManager);
+
+            atletaEsistente = entityManager.merge(atletaEsistente);
+            sportInstance = entityManager.merge(sportInstance);
+
+            atletaEsistente.getSport().add(sportInstance);
+
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+
+    }
+
+    @Override
+    public Sport findByDescrizione(AttivitaSportiva descrizione) throws Exception{
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+
+            sportDAO.setEntityManager(entityManager);
+
+            return sportDAO.findByDescrizione(descrizione);
+
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         } finally {

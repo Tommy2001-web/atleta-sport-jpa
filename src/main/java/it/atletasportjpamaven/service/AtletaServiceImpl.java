@@ -135,4 +135,23 @@ public class AtletaServiceImpl implements AtletaService {
     public void setAtletaDAO(AtletaDAO atletaDAO) {
         this.atletaDAO = atletaDAO;
     }
+
+    @Override
+    public Atleta findAtletaByIdWithSport(Long id) throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+
+            atletaDAO.setEntityManager(entityManager);
+
+            return atletaDAO.findAtletaByIdWithSport(id);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+
+    }
 }

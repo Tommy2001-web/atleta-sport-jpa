@@ -28,6 +28,8 @@ public class TestAtletaSport {
                 + atletaServiceInstance.listAll().size() + " atleti");
             testCRUD(sportServiceInstance);
 
+            testCollegaSportAdAtletaEsistente(atletaServiceInstance, sportServiceInstance);
+
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -84,5 +86,29 @@ public class TestAtletaSport {
             throw new Exception("testCRUD FAILED: delete fallita");
 
         System.out.println("--------testCRUD PASSED: fine----------");
+    }
+
+    private static void testCollegaSportAdAtletaEsistente(AtletaService atletaServiceInstance,
+                                                         SportService sportServiceInstance) throws Exception {
+        System.out.println(".......testCollegaSportAdAtletaEsistente inizio.............");
+
+        Sport sportEsistenteSuDb = sportServiceInstance.findByDescrizione(AttivitaSportiva.CALCIO);
+        if (sportEsistenteSuDb == null)
+            throw new RuntimeException("testCollegaSportAdAtletaEsistente fallito: sport inesistente ");
+
+        // mi creo un atleta inserendolo direttamente su db
+        Atleta atletaNuovo = new Atleta("giovanni", "fortunati",
+                LocalDate.of(1980, 04, 12), "104", 5);
+        atletaServiceInstance.insert(atletaNuovo);
+        if (atletaNuovo.getId() == null)
+            throw new RuntimeException("testCollegaSportAdAtletaEsistente fallito: atleta non inserito ");
+
+        sportServiceInstance.collegaAdAtletaEsistente(atletaNuovo, sportEsistenteSuDb);
+        // per fare il test ricarico interamente l'oggetto e la relazione
+        Atleta atletaReloaded = atletaServiceInstance.findAtletaByIdWithSport(atletaNuovo.getId());
+        if (atletaReloaded.getSport().size() != 1)
+            throw new RuntimeException("testCollegaSportAdAtletaEsistente fallito: sport non aggiunti ");
+
+        System.out.println(".......testCollegaSportAdAtletaEsistente fine: PASSED.............");
     }
 }

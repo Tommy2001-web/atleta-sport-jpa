@@ -3,15 +3,16 @@ package it.atletasportjpamaven.dao;
 import it.atletasportjpamaven.model.Atleta;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class AtletaDAOImpl implements AtletaDAO{
+public class AtletaDAOImpl implements AtletaDAO {
 
     private EntityManager entityManager;
 
     @Override
     public List<Atleta> listAll() throws Exception {
-        return entityManager.createQuery("from Atleta",Atleta.class).getResultList();
+        return entityManager.createQuery("from Atleta", Atleta.class).getResultList();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class AtletaDAOImpl implements AtletaDAO{
 
     @Override
     public void update(Atleta atleta) throws Exception {
-        if (atleta == null){
+        if (atleta == null) {
             throw new Exception("input non valido");
         }
         atleta = entityManager.merge(atleta);
@@ -43,7 +44,18 @@ public class AtletaDAOImpl implements AtletaDAO{
     }
 
     @Override
+    public Atleta findAtletaByIdWithSport(Long idAtleta) throws Exception {
+        TypedQuery<Atleta> query = entityManager.createQuery("select a from Atleta a " +
+                        "left join fetch a.sport s " +
+                        "where a.id = :idAtleta",
+                Atleta.class);
+        query.setParameter("idAtleta", idAtleta);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
 }
