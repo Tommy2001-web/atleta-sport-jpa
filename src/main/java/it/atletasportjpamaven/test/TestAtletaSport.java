@@ -31,9 +31,10 @@ public class TestAtletaSport {
             testCollegaSportAdAtletaEsistente(atletaServiceInstance, sportServiceInstance);
 
             testScollegaAtletaDaSport(sportServiceInstance, atletaServiceInstance);
-            */
-            testRemoveAtletaAfterUnbindingSports(sportServiceInstance, atletaServiceInstance);
 
+            testRemoveAtletaAfterUnbindingSports(sportServiceInstance, atletaServiceInstance);
+            */
+            testQuanteMedaglieVinteDaAtletiConSportChiusi(sportServiceInstance, atletaServiceInstance);
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -128,7 +129,7 @@ public class TestAtletaSport {
         // mi creo un atleta inserendolo direttamente su db
         Atleta atletaNuovo = new Atleta("francesco", "paolantoni",
                 LocalDate.of(1990, 9, 1), "200", 1);
-        ;
+
         atletaServiceInstance.insert(atletaNuovo);
         if (atletaNuovo.getId() == null)
             throw new RuntimeException("testScollegaAtletaDaSport fallito: atleta non inserito ");
@@ -171,6 +172,17 @@ public class TestAtletaSport {
         sportServiceInstance.removeAtletaAfterUnbindingSports(atletaDaCollegare.getId());
         if (atletaServiceInstance.findById(atletaDaCollegare.getId()) != null) throw new Exception("testRemoveAtletaAfterUnbindingSports FAILED: atleta ancora presente dopo la remove");
         System.out.println("----------testRemoveAtletaAfterUnbindingSports PASSED--------------");
+
+    }
+
+    private static void testQuanteMedaglieVinteDaAtletiConSportChiusi(SportService sportServiceInstance, AtletaService atletaServiceInstance) throws Exception{
+        System.out.println("-----------testQuanteMedaglieVinteDaAtletiConSportChiusi inizio------------");
+        atletaServiceInstance.aggiungiSport(atletaServiceInstance.findById(1L), sportServiceInstance.findById(1L));
+        Integer medaglieVinte = atletaServiceInstance.quanteMedaglieVinteDaAtletiConSportChiusi();
+        if (medaglieVinte == null || medaglieVinte == 0) throw new Exception("testQuanteMedaglieVinteDaAtletiConSportChiusi FAILED");
+        System.out.println(medaglieVinte);
+        System.out.println("----------------testQuanteMedaglieVinteDaAtletiConSportChiusi fine-----------------");
+
 
     }
 }

@@ -128,6 +128,23 @@ public class AtletaServiceImpl implements AtletaService {
     }
 
     @Override
+    public int quanteMedaglieVinteDaAtletiConSportChiusi() throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+            atletaDAO.setEntityManager(entityManager);
+
+            return atletaDAO.quanteMedaglieVinteDaAtletiConSportChiusi();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+    }
+
+    @Override
     public void aggiungiSport(Atleta atletaEsistente, Sport sportInstance) throws Exception {
         EntityManager entityManager = EntityManagerUtil.getEntityManager();
 

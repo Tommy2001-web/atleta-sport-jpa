@@ -19,6 +19,8 @@ public interface AtletaService {
 
     public void delete(Long id) throws Exception;
 
+    public int quanteMedaglieVinteDaAtletiConSportChiusi() throws Exception;
+
     public void setSportDAO(SportDAO sportDAO);
     public void setAtletaDAO(AtletaDAO atletaDAO);
 

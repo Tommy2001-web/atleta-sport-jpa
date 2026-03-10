@@ -82,7 +82,7 @@ public class Atleta {
     }
 
     public void setCodice(String coidce) {
-        this.codice = coidce;
+        this.codice = codice;
     }
 
     public Integer getNumeroMedaglieVinte() {
@@ -108,7 +108,7 @@ public class Atleta {
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", dataDiNascita=" + dataDiNascita +
-                ", coidce='" + codice + '\'' +
+                ", codice='" + codice + '\'' +
                 ", numeroMedaglieVinte=" + numeroMedaglieVinte +
                 '}';
     }
