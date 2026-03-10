@@ -1,7 +1,5 @@
 package it.atletasportjpamaven.test;
 
-import it.atletasportjpamaven.dao.AtletaDAO;
-import it.atletasportjpamaven.dao.AtletaDAOImpl;
 import it.atletasportjpamaven.dao.EntityManagerUtil;
 import it.atletasportjpamaven.model.Atleta;
 import it.atletasportjpamaven.model.AttivitaSportiva;
@@ -21,14 +19,18 @@ public class TestAtletaSport {
 
         try {
 
+
             System.out.println("nel db ci sono " + sportServiceInstance.listAll().size() + " sport e "
                 + atletaServiceInstance.listAll().size() + " atleti");
             initDatiPerTest(atletaServiceInstance, sportServiceInstance);
+            /*
             System.out.println("nel db ci sono " + sportServiceInstance.listAll().size() + " sport e "
                 + atletaServiceInstance.listAll().size() + " atleti");
             testCRUD(sportServiceInstance);
 
             testCollegaSportAdAtletaEsistente(atletaServiceInstance, sportServiceInstance);
+            */
+            testScollegaAtletaDaSport(sportServiceInstance, atletaServiceInstance);
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -110,5 +112,46 @@ public class TestAtletaSport {
             throw new RuntimeException("testCollegaSportAdAtletaEsistente fallito: sport non aggiunti ");
 
         System.out.println(".......testCollegaSportAdAtletaEsistente fine: PASSED.............");
+    }
+
+    private static void testScollegaAtletaDaSport(SportService sportServiceInstance, AtletaService atletaServiceInstance)
+            throws Exception {
+        System.out.println(".......testScollegaAtletaDaSport inizio.............");
+
+        // carico un sport e lo associo ad un nuovo atleta
+        Sport sportEsistenteSuDb = sportServiceInstance.findByDescrizione(AttivitaSportiva.CALCIO);
+        if (sportEsistenteSuDb == null)
+            throw new RuntimeException("testScollegaAtletaDaSport fallito: sport inesistente ");
+
+        // mi creo un atleta inserendolo direttamente su db
+        Atleta atletaNuovo = new Atleta("francesco", "paolantoni",
+                LocalDate.of(1990, 9, 1), "200", 1);
+        ;
+        atletaServiceInstance.insert(atletaNuovo);
+        if (atletaNuovo.getId() == null)
+            throw new RuntimeException("testScollegaAtletaDaSport fallito: atleta non inserito ");
+        atletaServiceInstance.aggiungiSport(atletaNuovo, sportEsistenteSuDb);
+
+        // ora ricarico il record e provo a disassociare il sport
+        Atleta atletaReloaded = atletaServiceInstance.findAtletaByIdWithSport(atletaNuovo.getId());
+        boolean confermoSportPresente = false;
+        for (Sport sportItem : atletaReloaded.getSport()) {
+            if (sportItem.getDescrizione().equals(sportEsistenteSuDb.getDescrizione())) {
+                confermoSportPresente = true;
+                break;
+            }
+        }
+
+        if (!confermoSportPresente)
+            throw new RuntimeException("testScollegaAtletaDaSport fallito: atleta e sport non associati ");
+
+        // ora provo la rimozione vera e propria ma poi forzo il caricamento per fare un
+        // confronto 'pulito'
+        sportServiceInstance.scollegaAtletaDaSport(atletaReloaded.getId());
+        atletaReloaded = atletaServiceInstance.findAtletaByIdWithSport(atletaNuovo.getId());
+        if (!atletaReloaded.getSport().isEmpty())
+            throw new RuntimeException("testScollegaAtletaDaSport fallito: sport ancora associato ");
+
+        System.out.println(".......testScollegaAtletaDaSport fine: PASSED.............");
     }
 }

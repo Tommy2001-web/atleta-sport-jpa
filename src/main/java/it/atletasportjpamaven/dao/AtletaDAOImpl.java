@@ -1,6 +1,7 @@
 package it.atletasportjpamaven.dao;
 
 import it.atletasportjpamaven.model.Atleta;
+import it.atletasportjpamaven.model.Sport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

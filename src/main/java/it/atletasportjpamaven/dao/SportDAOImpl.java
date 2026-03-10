@@ -1,5 +1,6 @@
 package it.atletasportjpamaven.dao;
 
+import it.atletasportjpamaven.model.Atleta;
 import it.atletasportjpamaven.model.AttivitaSportiva;
 import it.atletasportjpamaven.model.Sport;
 
@@ -46,6 +47,14 @@ public class SportDAOImpl implements SportDAO{
                 .setParameter(1, descrizione);
 
         return query.getResultStream().findFirst().orElse(null);
+    }
+
+    @Override
+    public void scollegaAtletaDaSport(Long idAtleta) throws Exception {
+        entityManager
+                .createNativeQuery("delete from atleta_sport where atleta_id = ?1", Atleta.class)
+                .setParameter(1, idAtleta)
+                .executeUpdate();
     }
 
     @Override

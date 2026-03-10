@@ -4,6 +4,7 @@ import it.atletasportjpamaven.dao.AtletaDAO;
 import it.atletasportjpamaven.dao.EntityManagerUtil;
 import it.atletasportjpamaven.dao.SportDAO;
 import it.atletasportjpamaven.model.Atleta;
+import it.atletasportjpamaven.model.Sport;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -127,13 +128,35 @@ public class AtletaServiceImpl implements AtletaService {
     }
 
     @Override
-    public void setSportDAO(SportDAO sportDAO) {
-        this.sportDAO = sportDAO;
-    }
+    public void aggiungiSport(Atleta atletaEsistente, Sport sportInstance) throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
-    @Override
-    public void setAtletaDAO(AtletaDAO atletaDAO) {
-        this.atletaDAO = atletaDAO;
+        try {
+            // questo è come il MyConnection.getConnection()
+            entityManager.getTransaction().begin();
+
+            // uso l'injection per il dao
+            atletaDAO.setEntityManager(entityManager);
+
+            // 'attacco' alla sessione di hibernate i due oggetti
+            // così jpa capisce che se è già presente quel ruolo non deve essere inserito
+            atletaEsistente = entityManager.merge(atletaEsistente);
+            sportInstance = entityManager.merge(sportInstance);
+
+            atletaEsistente.getSport().add(sportInstance);
+            // l'update non viene richiamato a mano in quanto
+            // risulta automatico, infatti il contesto di persistenza
+            // rileva che utenteEsistente ora è dirty vale a dire che una sua
+            // proprieta ha subito una modifica (vale anche per i Set ovviamente)
+
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
     }
 
     @Override
@@ -154,4 +177,15 @@ public class AtletaServiceImpl implements AtletaService {
         }
 
     }
+
+    @Override
+    public void setSportDAO(SportDAO sportDAO) {
+        this.sportDAO = sportDAO;
+    }
+
+    @Override
+    public void setAtletaDAO(AtletaDAO atletaDAO) {
+        this.atletaDAO = atletaDAO;
+    }
+
 }

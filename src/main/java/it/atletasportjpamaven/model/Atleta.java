@@ -30,7 +30,7 @@ public class Atleta {
     private Integer numeroMedaglieVinte;
 
     @ManyToMany
-    @JoinTable(name = "atleta_ruolo", joinColumns = @JoinColumn(name = "atleta_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "sport_id", referencedColumnName = "id"))
+    @JoinTable(name = "atleta_sport", joinColumns = @JoinColumn(name = "atleta_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "sport_id", referencedColumnName = "id"))
     private Set<Sport> sport = new HashSet<>();
 
     public Atleta() {

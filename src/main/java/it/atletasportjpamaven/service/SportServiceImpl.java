@@ -1,6 +1,5 @@
 package it.atletasportjpamaven.service;
 
-import it.atletasportjpamaven.dao.AtletaDAO;
 import it.atletasportjpamaven.dao.EntityManagerUtil;
 import it.atletasportjpamaven.dao.SportDAO;
 import it.atletasportjpamaven.model.Atleta;
@@ -19,10 +18,8 @@ public class SportServiceImpl implements SportService{
         EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
         try {
-            // uso l'injection per il dao
             sportDAO.setEntityManager(entityManager);
 
-            // eseguo quello che realmente devo fare
             return sportDAO.listAll();
 
         } catch (Exception e) {
@@ -38,10 +35,8 @@ public class SportServiceImpl implements SportService{
         EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
         try {
-            // uso l'injection per il dao
             sportDAO.setEntityManager(entityManager);
 
-            // eseguo quello che realmente devo fare
             return sportDAO.findById(id);
 
         } catch (Exception e) {
@@ -57,13 +52,10 @@ public class SportServiceImpl implements SportService{
         EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
         try {
-            // questo è come il MyConnection.getConnection()
             entityManager.getTransaction().begin();
 
-            // uso l'injection per il dao
             sportDAO.setEntityManager(entityManager);
 
-            // eseguo quello che realmente devo fare
             sportDAO.update(sportInstance);
 
             entityManager.getTransaction().commit();
@@ -107,13 +99,10 @@ public class SportServiceImpl implements SportService{
         EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
         try {
-            // questo è come il MyConnection.getConnection()
             entityManager.getTransaction().begin();
 
-            // uso l'injection per il dao
             sportDAO.setEntityManager(entityManager);
 
-            // eseguo quello che realmente devo fare
             Sport sportDaRimuovere = sportDAO.findById(id);
             sportDAO.delete(sportDaRimuovere);
 
@@ -163,6 +152,26 @@ public class SportServiceImpl implements SportService{
             return sportDAO.findByDescrizione(descrizione);
 
         } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+    }
+
+    @Override
+    public void scollegaAtletaDaSport(Long idAtleta) throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            sportDAO.setEntityManager(entityManager);
+
+            sportDAO.scollegaAtletaDaSport(idAtleta);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             e.printStackTrace();
             throw e;
         } finally {

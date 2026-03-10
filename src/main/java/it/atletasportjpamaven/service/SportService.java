@@ -22,7 +22,9 @@ public interface SportService {
 
     public void collegaAdAtletaEsistente(Atleta atletaEsistente, Sport ruoloInstance) throws Exception;
 
-    public void setSportDAO(SportDAO sportDAO);
-
     public Sport findByDescrizione(AttivitaSportiva descrizione) throws Exception;
+
+    public void scollegaAtletaDaSport(Long idAtleta) throws Exception;
+
+    public void setSportDAO(SportDAO sportDAO);
 }
