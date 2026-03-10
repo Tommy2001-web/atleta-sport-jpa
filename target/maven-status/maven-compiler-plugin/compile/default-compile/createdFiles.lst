@@ -1,0 +1,16 @@
+it\atletasportjpamaven\model\AttivitaSportiva.class
+it\atletasportjpamaven\service\SportService.class
+it\atletasportjpamaven\dao\IBaseDAO.class
+it\atletasportjpamaven\dao\AtletaDAO.class
+it\atletasportjpamaven\model\Sport.class
+it\atletasportjpamaven\dao\SportDAO.class
+it\atletasportjpamaven\test\TestAtletaSport.class
+it\atletasportjpamaven\service\SportServiceImpl.class
+it\atletasportjpamaven\dao\AtletaDAOImpl.class
+it\atletasportjpamaven\model\Atleta.class
+it\atletasportjpamaven\dao\MyDAOFactory.class
+it\atletasportjpamaven\dao\SportDAOImpl.class
+it\atletasportjpamaven\service\MyServiceFactory.class
+it\atletasportjpamaven\service\AtletaServiceImpl.class
+it\atletasportjpamaven\dao\EntityManagerUtil.class
+it\atletasportjpamaven\service\AtletaService.class
