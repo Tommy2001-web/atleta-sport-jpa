@@ -33,8 +33,10 @@ public class TestAtletaSport {
             testScollegaAtletaDaSport(sportServiceInstance, atletaServiceInstance);
 
             testRemoveAtletaAfterUnbindingSports(sportServiceInstance, atletaServiceInstance);
-            */
+
             testQuanteMedaglieVinteDaAtletiConSportChiusi(sportServiceInstance, atletaServiceInstance);
+            */
+            testFindErrors(sportServiceInstance, atletaServiceInstance);
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -183,6 +185,26 @@ public class TestAtletaSport {
         System.out.println(medaglieVinte);
         System.out.println("----------------testQuanteMedaglieVinteDaAtletiConSportChiusi fine-----------------");
 
+
+    }
+
+    private static void testFindErrors (SportService sportServiceInstance, AtletaService atletaServiceInstance)
+        throws Exception{
+        System.out.println("----------------testFindErrors inizio------------------");
+
+        Sport sportInstance = new Sport(AttivitaSportiva.CALCIO,
+                LocalDate.of(2026, 12, 11),
+                LocalDate.of(2024, 12, 11));
+
+        sportServiceInstance.insert(sportInstance);
+        if (sportServiceInstance.findByDescrizione(AttivitaSportiva.CALCIO).getId() == null)
+            throw new Exception ("testFindErrors FAILED: insert fallito");
+
+        //valore atteso = 1
+        List<Sport> listaSport = sportServiceInstance.findErrors();
+        if (listaSport.size() != 1) throw new Exception("testFindErrors FAILED: nessun valore trovato");
+
+        System.out.println("----------------testFindErrors PASSED fine------------------");
 
     }
 }

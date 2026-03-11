@@ -28,6 +28,8 @@ public interface SportService {
 
     public void removeAtletaAfterUnbindingSports(Long idAtleta) throws Exception;
 
+    public List<Sport> findErrors() throws Exception;
+
     public void setSportDAO(SportDAO sportDAO);
 
     public void setAtletaDAO(AtletaDAO atletaDAO);

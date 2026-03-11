@@ -206,6 +206,23 @@ public class SportServiceImpl implements SportService{
     }
 
     @Override
+    public List<Sport> findErrors() throws Exception {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+            sportDAO.setEntityManager(entityManager);
+
+            return sportDAO.findErrors();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            EntityManagerUtil.closeEntityManager(entityManager);
+        }
+    }
+
+    @Override
     public void setSportDAO(SportDAO sportDAO) {
         this.sportDAO = sportDAO;
     }

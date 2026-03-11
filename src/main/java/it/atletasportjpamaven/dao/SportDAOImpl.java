@@ -58,6 +58,11 @@ public class SportDAOImpl implements SportDAO{
     }
 
     @Override
+    public List<Sport> findErrors() throws Exception {
+        return entityManager.createQuery("select s from Sport s where dataFine < dataInizio", Sport.class).getResultList();
+    }
+
+    @Override
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
